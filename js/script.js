@@ -13,7 +13,7 @@ function qp(name){ return new URL(location.href).searchParams.get(name) || ""; }
 function decodePlus(v){ return decodeURIComponent((v || "").replace(/\+/g, " ")); }
 
 async function loadConfig(){
-  const res = await fetch("data/config.json", { cache: "no-store" });
+  const res = await fetch("./data/config.json", { cache: "no-store" });
   if(!res.ok) throw new Error("config.json tidak ditemukan");
   return res.json();
 }
@@ -207,7 +207,7 @@ function gallery(){
 
   if(videos[0]){
     const v = videos[0];
-    const poster = v.poster || "assets/img/thumbnail.jpg";
+    const poster = v.poster || "./assets/img/thumbnail.jpg";
 
     const card = document.createElement("div");
     card.className = "featuredCard";
@@ -555,6 +555,26 @@ function closing(){
   $("#closingTitle").textContent = state.cfg.closing?.title || "Terima Kasih";
   $("#closingDesc").textContent = state.cfg.closing?.desc || "";
 }
+
+/* RENAME DARI story() → renderStory() AGAR TIDAK BENTROK DENGAN id="story" */
+function renderStory(){
+  const wrap = $("#storyWrap");
+  wrap.innerHTML = "";
+  (state.cfg.story || []).forEach((s)=>{
+    const d = document.createElement("div");
+    d.className = "tItem glass reveal";
+    d.innerHTML = `
+      <div class="tTop">
+        <span class="year">${safeText(s.year)}</span>
+        <span class="muted small">—</span>
+      </div>
+      <h4>${safeText(s.title)}</h4>
+      <p>${safeText(s.desc)}</p>
+    `;
+    wrap.appendChild(d);
+  });
+}
+
 function reveal(){
   const io = new IntersectionObserver((entries)=>{
     entries.forEach(en=>{ if(en.isIntersecting) en.target.classList.add("show"); });
@@ -575,7 +595,7 @@ function wireUI(){
 }
 function registerSW(){
   if("serviceWorker" in navigator){
-    navigator.serviceWorker.register("sw.js").catch(()=>{});
+    navigator.serviceWorker.register("./sw.js").catch(()=>{});
   }
 }
 
@@ -585,7 +605,7 @@ function registerSW(){
     state.cfg = await loadConfig();
     setTheme(); setBrand(); fillCover(); applySectionBackgrounds();
     setGuest(); setHome(); setCouple(); buildEvents();
-    gallery(); story(); gifts(); wireRSVP(); closing();
+    gallery(); renderStory(); gifts(); wireRSVP(); closing();
     countdown(); wireAudio(); wireUI(); reveal(); registerSW();
   }catch(err){
     console.error(err);
