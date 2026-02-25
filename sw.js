@@ -1,4 +1,4 @@
-const CACHE = "glass-invite-final-v2";
+const CACHE = "glass-invite-final-v3";
 const ASSETS = [
   "./",
   "./index.html",
@@ -6,10 +6,8 @@ const ASSETS = [
   "./js/script.js",
   "./data/config.json",
   "./manifest.webmanifest",
-  // Ikon dasar untuk PWA
   "./assets/icons/icon-192.png",
   "./assets/icons/icon-512.png"
-  // Aset lain akan dicache secara runtime saat diakses
 ];
 
 self.addEventListener("install", (e)=>{
@@ -31,7 +29,6 @@ self.addEventListener("fetch", (e)=>{
       if(cached) return cached;
       return fetch(e.request).then((res)=>{
         const copy = res.clone();
-        // Runtime cache untuk permintaan GET dan origin yang sama
         try{
           if(e.request.method==="GET" && new URL(e.request.url).origin===self.location.origin){
             caches.open(CACHE).then(c=>c.put(e.request, copy)).catch(()=>{});
