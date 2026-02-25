@@ -1,19 +1,15 @@
 /* =========================================================
-   Glassmorphism Invitation - FINAL Polished (with Featured Video)
+   Glassmorphism Invitation - Mobile-Stable Fix
+   - Perbaikan markup innerHTML (img/iframe/a)
+   - Gallery: split top/bottom photos + featured video center
+   - Events: mapEmbed ditanam sebagai <iframe> valid
 ========================================================= */
 
 const $ = (s, p=document) => p.querySelector(s);
 const $$ = (s, p=document) => [...p.querySelectorAll(s)];
 
-const LS = {
-  RSVP: "inv_rsvp_v3",
-  WISH: "inv_wish_v3"
-};
-
-const state = {
-  cfg: null,
-  muted: true
-};
+const LS = { RSVP: "inv_rsvp_v3", WISH: "inv_wish_v3" };
+const state = { cfg: null, muted: true };
 
 function safeText(s){ return (s ?? "").toString().replace(/[<>]/g,"").trim(); }
 function qp(name){ return new URL(location.href).searchParams.get(name) || ""; }
@@ -30,10 +26,8 @@ function setTheme(){
   if(t.bg) document.documentElement.style.setProperty("--bg", t.bg);
   if(t.accent) document.documentElement.style.setProperty("--accent", t.accent);
   if(t.accent2) document.documentElement.style.setProperty("--accent2", t.accent2);
-
   const meta = document.querySelector('meta[name="theme-color"]');
   if(meta && t.accent) meta.setAttribute("content", t.accent);
-
   document.title = state.cfg.siteTitle || document.title;
 }
 
@@ -62,11 +56,8 @@ function setGuest(){
   const pName = state.cfg.guest?.paramName || "to";
   const raw = qp(pName);
   const name = safeText(decodePlus(raw)) || (state.cfg.guest?.defaultName || "Tamu Undangan");
-
   $("#guestName").textContent = name;
   $("#guestInline").textContent = name;
-
-  // Prefill forms
   $("#rsvpName").value = name !== (state.cfg.guest?.defaultName || "Tamu Undangan") ? name : "";
   $("#wishName").value = $("#rsvpName").value;
 }
@@ -77,13 +68,10 @@ function setHome(){
   $("#homeHeadline").textContent = home.headline || "";
   $("#homeDatePill").textContent = state.cfg.cover?.dateText || "";
   $("#homeLocPill").textContent = home.locationText || "";
-
   const groomShort = (state.cfg.couple?.groom?.name || "Mempelai Pria").split(" ")[0];
   const brideShort = (state.cfg.couple?.bride?.name || "Mempelai Wanita").split(" ")[0];
-
   $("#groomNameShort").textContent = groomShort;
   $("#brideNameShort").textContent = brideShort;
-
   $("#closingGroom").textContent = groomShort;
   $("#closingBride").textContent = brideShort;
 }
@@ -92,19 +80,17 @@ function setCouple(){
   const couple = state.cfg.couple || {};
   const bride = couple.bride || {};
   const groom = couple.groom || {};
-
   $("#brideName").textContent = bride.name || "Mempelai Wanita";
   $("#brideParents").textContent = bride.parents || "";
   if (bride.photo) $("#bridePhoto").src = bride.photo;
   $("#brideIg").href = bride.instagram || "#";
-
   $("#groomName").textContent = groom.name || "Mempelai Pria";
   $("#groomParents").textContent = groom.parents || "";
   if (groom.photo) $("#groomPhoto").src = groom.photo;
   $("#groomIg").href = groom.instagram || "#";
 }
 
-/* -------- Events -------- */
+/* -------- Events (fix iframe & link) -------- */
 function buildEvents(){
   const wrap = $("#eventCards");
   wrap.innerHTML = "";
@@ -125,6 +111,14 @@ function buildEvents(){
       </div>
     `).join("");
 
+    const mapIframe = ev.mapEmbed
+      ? `<iframe class="mapFrame" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="${ev.mapEmbed}" title="Peta ${safeText(ev.type)}"></iframe>`
+      : "";
+
+    const dirBtn = ev.mapDirection
+      ? `<a class="btn btn--ghost" href="${ev.mapDirection}" target="_blank" rel="noopener">Petunjuk Arah</a>`
+      : "";
+
     card.innerHTML = `
       <div class="eventTop">
         <span class="badge">${safeText(ev.type)}</span>
@@ -136,11 +130,10 @@ function buildEvents(){
       </div>
 
       ${itemsHtml}
-
-      ${ev.mapEmbed ? `<iframe class="mapFrame" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="${ev.mapEmbed}" title="Peta ${safeText(ev.type)}"></iframe>` : ""}
+      ${mapIframe}
 
       <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:10px">
-        ${ev.mapDirection ? `<a class="btn btn--ghost" href="${ev.mapDirection}" target="_blank" rel="noopener">Petunjuk Arah</a>` : ""}
+        ${dirBtn}
       </div>
     `;
 
@@ -154,12 +147,10 @@ function countdown(){
   const tick = ()=>{
     const now = Date.now();
     let d = Math.max(0, target - now);
-
     const days = Math.floor(d/(24*3600*1000)); d -= days*24*3600*1000;
     const hrs = Math.floor(d/(3600*1000)); d -= hrs*3600*1000;
     const mins = Math.floor(d/(60*1000)); d -= mins*60*1000;
     const secs = Math.floor(d/1000);
-
     $("#cdDays").textContent = String(days).padStart(2,"0");
     $("#cdHours").textContent = String(hrs).padStart(2,"0");
     $("#cdMins").textContent = String(mins).padStart(2,"0");
@@ -169,12 +160,11 @@ function countdown(){
   setInterval(tick, 1000);
 }
 
-/* -------- Gallery: foto atas, featured video, foto bawah -------- */
+/* -------- Gallery (split + featured video) -------- */
 function gallery(){
   const gridTop = $("#galleryPhotosTop");
   const gridBottom = $("#galleryPhotosBottom");
   const featured = $("#galleryVideoFeatured");
-
   gridTop.innerHTML = "";
   gridBottom.innerHTML = "";
   featured.innerHTML = "";
@@ -182,30 +172,28 @@ function gallery(){
   const photos = state.cfg.gallery?.photos || [];
   const videos = state.cfg.gallery?.videos || [];
 
-  // Bagi foto menjadi dua bagian mengapit video
   const mid = Math.ceil(photos.length / 2);
   const photosTop = photos.slice(0, mid);
   const photosBottom = photos.slice(mid);
 
-  // Render foto (atas)
-  photosTop.forEach((src)=>{
+  const makePhotoItem = (src) => {
     const d = document.createElement("div");
     d.className = "gItem glass";
     d.dataset.full = src;
     d.innerHTML = `<img src="${src}" alt="Foto galeri" loading="lazy" />`;
-    gridTop.appendChild(d);
-  });
+    return d;
+  };
 
-  // Featured video (satu yang pertama; jika ada beberapa, ambil index 0)
-  const v = videos[0];
-  if(v){
-    const posterFallback = "assets/img/thumbnail.jpg"; // thumbnail khusus yang kamu sediakan
-    const poster = v.poster || posterFallback;
+  photosTop.forEach(src => gridTop.appendChild(makePhotoItem(src)));
+
+  // Featured video (ambil video pertama)
+  if(videos[0]){
+    const v = videos[0];
+    const poster = v.poster || "assets/img/thumbnail.jpg";
     const card = document.createElement("div");
     card.className = "featuredCard";
-    // Klik area untuk buka modal video
     card.innerHTML = `
-      <a href="javascript:void(0)" class="featuredMediaLink" aria-label="${safeText(v.title || "Video")}" data-video="${v.src}">
+      <a href="javascript:void(0)" class="featuredMediaLink" data-video="${v.src}">
         <div class="featuredMedia" style="background-image:url('${poster}');"></div>
         <div class="featuredOverlay" aria-hidden="true">
           <div class="featuredPlay">▶</div>
@@ -214,7 +202,6 @@ function gallery(){
     `;
     featured.appendChild(card);
 
-    // Klik untuk buka video modal
     featured.addEventListener("click",(e)=>{
       const link = e.target.closest(".featuredMediaLink");
       if(link){
@@ -223,16 +210,9 @@ function gallery(){
     });
   }
 
-  // Render foto (bawah)
-  photosBottom.forEach((src)=>{
-    const d = document.createElement("div");
-    d.className = "gItem glass";
-    d.dataset.full = src;
-    d.innerHTML = `<img src="${src}" alt="Foto galeri" loading="lazy" />`;
-    gridBottom.appendChild(d);
-  });
+  photosBottom.forEach(src => gridBottom.appendChild(makePhotoItem(src)));
 
-  // Photo modal handlers
+  // Photo modal
   const photoModal = $("#photoModal");
   const photoFull = $("#photoFull");
   function openPhoto(src){
@@ -247,7 +227,7 @@ function gallery(){
   $("#photoClose").addEventListener("click", closePhoto);
   photoModal.addEventListener("click",(e)=>{ if(e.target===photoModal) closePhoto(); });
 
-  // Video modal handlers
+  // Video modal
   const videoModal = $("#videoModal");
   const player = $("#videoPlayer");
   function openVideoModal(src){
@@ -266,7 +246,7 @@ function gallery(){
   $("#videoClose").addEventListener("click", closeVideo);
   videoModal.addEventListener("click",(e)=>{ if(e.target===videoModal) closeVideo(); });
 
-  // Delegasi klik untuk foto
+  // Delegasi klik foto
   const onPhotoGridClick = (e)=>{
     const p = e.target.closest("[data-full]");
     if(p){ openPhoto(p.dataset.full); }
@@ -274,28 +254,9 @@ function gallery(){
   gridTop.addEventListener("click", onPhotoGridClick);
   gridBottom.addEventListener("click", onPhotoGridClick);
 
-  // ESC untuk menutup modal
+  // ESC
   window.addEventListener("keydown",(e)=>{
     if(e.key==="Escape"){ closePhoto(); closeVideo(); }
-  });
-}
-
-/* -------- Story -------- */
-function story(){
-  const wrap = $("#storyWrap");
-  wrap.innerHTML = "";
-  (state.cfg.story || []).forEach((s)=>{
-    const d = document.createElement("div");
-    d.className = "tItem glass reveal";
-    d.innerHTML = `
-      <div class="tTop">
-        <span class="year">${safeText(s.year)}</span>
-        <span class="muted small">—</span>
-      </div>
-      <h4>${safeText(s.title)}</h4>
-      <p>${safeText(s.desc)}</p>
-    `;
-    wrap.appendChild(d);
   });
 }
 
@@ -303,7 +264,6 @@ function story(){
 function gifts(){
   const wrap = $("#giftWrap");
   wrap.innerHTML = "";
-
   if(!state.cfg.gifts?.enabled){
     $("#gifts").style.display = "none";
     return;
@@ -313,8 +273,12 @@ function gifts(){
     const d = document.createElement("div");
     d.className = "giftCard glass reveal";
 
-    const logo = g.logo ? `<img class="giftLogo" src="${g.logo}" alt="Logo ${safeText(g.note || g.label)}" loading="lazy" />` : "";
-    const note = g.note ? `<div class="giftNote">${safeText(g.note)}</div>` : `<div class="giftNote">${safeText(g.label)}</div>`;
+    const logo = g.logo
+      ? `<img class="giftLogo" src="${g.logo}" alt="Logo ${safeText(g.note || g.label)}" loading="lazy" />`
+      : "";
+    const note = g.note
+      ? `<div class="giftNote">${safeText(g.note)}</div>`
+      : `<div class="giftNote">${safeText(g.label)}</div>`;
 
     d.innerHTML = `
       <div class="giftTop">
@@ -345,7 +309,6 @@ function gifts(){
   wrap.addEventListener("click", async (e)=>{
     const copyBtn = e.target.closest("[data-copy]");
     const shareBtn = e.target.closest("[data-share]");
-
     if(copyBtn){
       const val = copyBtn.getAttribute("data-copy");
       try{
@@ -356,7 +319,6 @@ function gifts(){
         alert("Gagal salin otomatis. Salin manual ya: " + val);
       }
     }
-
     if(shareBtn){
       const val = shareBtn.getAttribute("data-share");
       if(navigator.share){
@@ -368,12 +330,11 @@ function gifts(){
   });
 }
 
-/* -------- Calendar (ICS) -------- */
+/* -------- ICS -------- */
 function makeICS({title, startISO, durationHours=3, location="", description=""}){
   const start = new Date(startISO);
   const end = new Date(start.getTime() + durationHours*3600*1000);
   const fmt = (d)=> new Date(d).toISOString().replace(/[-:]/g,"").split(".")[0] + "Z";
-
   const ics =
 `BEGIN:VCALENDAR
 VERSION:2.0
@@ -390,15 +351,11 @@ DESCRIPTION:${description}
 LOCATION:${location}
 END:VEVENT
 END:VCALENDAR`;
-
   const blob = new Blob([ics], { type:"text/calendar;charset=utf-8" });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
-  a.href = url;
-  a.download = "undangan.ics";
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
+  a.href = url; a.download = "undangan.ics";
+  document.body.appendChild(a); a.click(); a.remove();
   URL.revokeObjectURL(url);
 }
 
@@ -409,23 +366,19 @@ function setMutedUI(muted){
   $("#btnMuteGate").setAttribute("aria-pressed", String(!muted));
   $("#btnMuteGate").textContent = muted ? "Musik: Off" : "Musik: On";
 }
-
 async function playAudio(){
   const bgm = $("#bgm");
   bgm.muted = state.muted;
   try{ await bgm.play(); }catch{}
 }
-
 function wireAudio(){
   const bgm = $("#bgm");
   const audioSrc = state.cfg.music?.src || "";
   bgm.src = audioSrc;
 
-  // Jika tidak ada audio, sembunyikan kontrol terkait
   if(!audioSrc){
     $("#btnMute").style.display = "none";
     $("#btnMuteGate").style.display = "none";
-    // Tetap bisa buka undangan
     $("#btnOpen").addEventListener("click", ()=>$("#coverGate").classList.add("hidden"));
     return;
   }
@@ -437,24 +390,20 @@ function wireAudio(){
     bgm.muted = state.muted;
     if(!state.muted) await playAudio();
   };
-
   $("#btnMute").addEventListener("click", toggle);
   $("#btnMuteGate").addEventListener("click", toggle);
-
   $("#btnOpen").addEventListener("click", async ()=>{
     $("#coverGate").classList.add("hidden");
     await playAudio();
   });
 }
 
-/* -------- Wishes via Google Sheets (Apps Script JSONP) -------- */
+/* -------- Wishes & RSVP -------- */
 function readLS(key){
   try{ return JSON.parse(localStorage.getItem(key) || "[]"); }
   catch{ return []; }
 }
-function writeLS(key, value){
-  localStorage.setItem(key, JSON.stringify(value));
-}
+function writeLS(key, value){ localStorage.setItem(key, JSON.stringify(value)); }
 
 function wishItem(w){
   const el = document.createElement("div");
@@ -468,44 +417,27 @@ async function postToSheet(payload){
   if(!state.cfg.sheet?.enabled) return { ok:false, msg:"sheet-disabled" };
   const url = state.cfg.sheet?.postEndpoint;
   if(!url) return { ok:false, msg:"missing-endpoint" };
-
   try{
-    await fetch(url, {
-      method: "POST",
-      mode: "no-cors",
-      headers: { "Content-Type":"application/json" },
-      body: JSON.stringify(payload)
-    });
+    await fetch(url, { method: "POST", mode: "no-cors", headers: { "Content-Type":"application/json" }, body: JSON.stringify(payload) });
     return { ok:true };
   }catch(err){
     return { ok:false, msg: err.message || "failed" };
   }
 }
 
-// JSONP loader for wishes
 function fetchWishesJSONP(limit=100){
   return new Promise((resolve)=>{
     if(!state.cfg.sheet?.enabled) return resolve(null);
     const url = state.cfg.sheet?.readEndpoint;
     if(!url) return resolve(null);
-
     const cbName = "wishes_cb_" + Math.random().toString(16).slice(2);
     window[cbName] = (data)=>{
-      try{
-        resolve(Array.isArray(data?.wishes) ? data.wishes : []);
-      }finally{
-        delete window[cbName];
-        script.remove();
-      }
+      try{ resolve(Array.isArray(data?.wishes) ? data.wishes : []); }
+      finally{ delete window[cbName]; script.remove(); }
     };
-
     const script = document.createElement("script");
     script.src = `${url}?type=wishes&limit=${encodeURIComponent(limit)}&callback=${encodeURIComponent(cbName)}`;
-    script.onerror = ()=>{
-      delete window[cbName];
-      script.remove();
-      resolve(null);
-    };
+    script.onerror = ()=>{ delete window[cbName]; script.remove(); resolve(null); };
     document.body.appendChild(script);
   });
 }
@@ -513,32 +445,21 @@ function fetchWishesJSONP(limit=100){
 async function renderWishes(){
   const wrap = $("#wishList");
   wrap.innerHTML = `<p class="muted small">Memuat ucapan...</p>`;
-
-  // Prefer sheet data
   let list = await fetchWishesJSONP(200);
-
-  // fallback local storage if sheet not ready
-  if(!list){
-    list = readLS(LS.WISH);
-  }
-
+  if(!list){ list = readLS(LS.WISH); }
   wrap.innerHTML = "";
   if(!list.length){
     wrap.innerHTML = `<p class="muted small">Belum ada ucapan. Jadilah yang pertama 😊</p>`;
     return;
   }
-
-  // newest first
   list.slice().reverse().forEach(w => wrap.appendChild(wishItem(w)));
 }
 
-/* -------- RSVP & Wish forms -------- */
 function wireRSVP(){
   if(!state.cfg.rsvp?.enabled){
     $("#rsvp").style.display = "none";
     return;
   }
-
   $("#rsvpPax").max = String(state.cfg.rsvp.maxPax || 5);
 
   $("#rsvpForm").addEventListener("submit", async (e)=>{
@@ -547,77 +468,42 @@ function wireRSVP(){
     const attend = $("#rsvpAttend").value;
     const pax = Math.max(1, Math.min(Number($("#rsvpPax").value || 1), Number(state.cfg.rsvp.maxPax || 5)));
     const msg = safeText($("#rsvpMsg").value);
-
-    if(!name){
-      $("#rsvpNote").textContent = "Nama wajib diisi.";
-      return;
-    }
-
+    if(!name){ $("#rsvpNote").textContent = "Nama wajib diisi."; return; }
     const entry = { type:"rsvp", name, attend, pax, msg, createdAt: new Date().toISOString() };
-
     const res = await postToSheet(entry);
     $("#rsvpNote").textContent = res.ok ? "RSVP terkirim ✓" : "RSVP tersimpan lokal (endpoint belum siap).";
-
-    // fallback local
-    const list = readLS(LS.RSVP);
-    list.unshift(entry);
-    writeLS(LS.RSVP, list);
-
-    $("#rsvpForm").reset();
-    $("#rsvpPax").value = 1;
+    const list = readLS(LS.RSVP); list.unshift(entry); writeLS(LS.RSVP, list);
+    $("#rsvpForm").reset(); $("#rsvpPax").value = 1;
   });
 
   $("#wishForm").addEventListener("submit", async (e)=>{
     e.preventDefault();
     const name = safeText($("#wishName").value);
     const text = safeText($("#wishText").value);
-
-    if(!name || !text){
-      alert("Nama dan ucapan wajib diisi.");
-      return;
-    }
-
+    if(!name || !text){ alert("Nama dan ucapan wajib diisi."); return; }
     const entry = { type:"wish", name, text, createdAt: new Date().toISOString() };
-
     const res = await postToSheet(entry);
-
-    // fallback local
-    const list = readLS(LS.WISH);
-    list.unshift(entry);
-    writeLS(LS.WISH, list);
-
+    const list = readLS(LS.WISH); list.unshift(entry); writeLS(LS.WISH, list);
     $("#wishForm").reset();
-
-    // refresh right panel
     await renderWishes();
-
-    if(!res.ok){
-      console.warn("Sheet endpoint not ready. Stored locally.");
-    }
+    if(!res.ok){ console.warn("Sheet endpoint not ready. Stored locally."); }
   });
 
   $("#btnRefreshWishes").addEventListener("click", ()=>renderWishes());
-
   renderWishes();
 }
 
-/* -------- Closing text -------- */
+/* -------- Closing, Reveal, UI, SW -------- */
 function closing(){
   $("#closingTitle").textContent = state.cfg.closing?.title || "Terima Kasih";
   $("#closingDesc").textContent = state.cfg.closing?.desc || "";
 }
-
-/* -------- Reveal animation -------- */
 function reveal(){
   const io = new IntersectionObserver((entries)=>{
-    entries.forEach(en=>{
-      if(en.isIntersecting) en.target.classList.add("show");
-    });
+    entries.forEach(en=>{ if(en.isIntersecting) en.target.classList.add("show"); });
   }, { threshold: 0.12 });
   $$(".reveal").forEach(el=>io.observe(el));
 }
-
-/* -------- UI helpers -------- */
 function wireUI(){
   $("#btnTop").addEventListener("click", ()=>window.scrollTo({ top:0, behavior:"smooth" }));
   $("#btnIcs").addEventListener("click", ()=>{
@@ -630,8 +516,6 @@ function wireUI(){
     });
   });
 }
-
-/* -------- Service worker -------- */
 function registerSW(){
   if("serviceWorker" in navigator){
     navigator.serviceWorker.register("sw.js").catch(()=>{});
@@ -642,28 +526,10 @@ function registerSW(){
 (async function init(){
   try{
     state.cfg = await loadConfig();
-
-    setTheme();
-    setBrand();
-    fillCover();
-    applySectionBackgrounds();
-
-    setGuest();
-    setHome();
-    setCouple();
-    buildEvents();
-    gallery();
-    story();
-    gifts();
-    wireRSVP();
-    closing();
-
-    countdown();
-    wireAudio();
-    wireUI();
-    reveal();
-    registerSW();
-
+    setTheme(); setBrand(); fillCover(); applySectionBackgrounds();
+    setGuest(); setHome(); setCouple(); buildEvents();
+    gallery(); story(); gifts(); wireRSVP(); closing();
+    countdown(); wireAudio(); wireUI(); reveal(); registerSW();
   }catch(err){
     console.error(err);
     alert("Gagal memuat undangan. Pastikan struktur folder & path file benar.");
