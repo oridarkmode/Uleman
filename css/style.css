@@ -15,6 +15,10 @@
 
   --fontDisplay: "Cormorant Garamond", serif;
   --fontBody: "Plus Jakarta Sans", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+
+  /* Blur yang lebih ringan agar foto background terlihat jelas */
+  --blurGlass: 8px;
+  --blurFeatured: 10px;
 }
 
 *{box-sizing:border-box}
@@ -94,8 +98,8 @@ a{ color:inherit; text-decoration:none; }
   border: 1px solid var(--line);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(var(--blurGlass));
+  -webkit-backdrop-filter: blur(var(--blurGlass));
 }
 
 /* Sections */
@@ -121,16 +125,16 @@ a{ color:inherit; text-decoration:none; }
 
 /* Backgrounds: lebih jelas untuk HOME & CLOSING */
 .sectionBg--home{
-  opacity:.44; /* tampilkan gambar lebih jelas */
+  opacity:.50;
 }
 .sectionBg--home::after{
-  background: linear-gradient(180deg, rgba(7,6,12,.70), rgba(7,6,12,.45), rgba(7,6,12,.80));
+  background: linear-gradient(180deg, rgba(7,6,12,.58), rgba(7,6,12,.40), rgba(7,6,12,.72));
 }
 .sectionBg--closing{
-  opacity:.42; /* tampilkan gambar lebih jelas */
+  opacity:.48;
 }
 .sectionBg--closing::after{
-  background: linear-gradient(180deg, rgba(7,6,12,.68), rgba(7,6,12,.44), rgba(7,6,12,.82));
+  background: linear-gradient(180deg, rgba(7,6,12,.56), rgba(7,6,12,.38), rgba(7,6,12,.74));
 }
 
 /* Head center */
@@ -210,16 +214,16 @@ a{ color:inherit; text-decoration:none; }
   inset:0;
   background-position:center;
   background-size:cover;
-  opacity: .34; /* dari .100 -> .34 agar gambar lebih jelas */
+  opacity: .40;
   filter: saturate(1.05) contrast(1.05);
 }
 .gate__bg::after{
   content:"";
   position:absolute; inset:0;
-  /* overlay lebih ringan agar gambar terlihat */
-  background: radial-gradient(900px 500px at 20% 10%, rgba(199,184,255,.18), transparent 60%),
-              radial-gradient(800px 450px at 100% 20%, rgba(124,247,212,.12), transparent 55%),
-              linear-gradient(180deg, rgba(7,6,12,.78), rgba(7,6,12,.78), rgba(7,6,12,.82));
+  background:
+    radial-gradient(900px 500px at 20% 10%, rgba(199,184,255,.14), transparent 60%),
+    radial-gradient(800px 450px at 100% 20%, rgba(124,247,212,.10), transparent 55%),
+    linear-gradient(180deg, rgba(7,6,12,.64), rgba(7,6,12,.64), rgba(7,6,12,.70));
 }
 .gate__card{
   width: min(560px, calc(100% - 36px));
@@ -433,21 +437,22 @@ a{ color:inherit; text-decoration:none; }
 .featuredMedia{
   width:100%;
   aspect-ratio: 16 / 9;
-  background: rgba(0,0,0,.6) url("../assets/img/thumbnail.jpg") center/cover no-repeat;
+  background: rgba(0,0,0,.5) center/cover no-repeat; /* gambar di-set via JS */
   display:block;
 }
 .featuredOverlay{
   position:absolute; inset:0;
   display:grid; place-items:center;
-  background: radial-gradient(circle at center, rgba(0,0,0,.18), rgba(0,0,0,.48));
+  background: radial-gradient(circle at center, rgba(0,0,0,.12), rgba(0,0,0,.32));
 }
 .featuredPlay{
   width:84px; height:84px;
   border-radius:999px;
-  border: 1px solid rgba(255,255,255,.28);
-  background: rgba(255,255,255,.16);
+  border: 1px solid rgba(255,255,255,.24);
+  background: rgba(255,255,255,.14);
   display:grid; place-items:center;
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(var(--blurFeatured));
+  -webkit-backdrop-filter: blur(var(--blurFeatured));
   font-size: 28px;
   color: #fff;
 }
