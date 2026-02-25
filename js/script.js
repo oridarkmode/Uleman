@@ -1,10 +1,5 @@
 /* =========================================================
-   Glassmorphism Invitation - FINAL Polished
-   - Aksesibilitas & UX kecil ditingkatkan
-   - Script defer agar tidak blocking render
-   - Tombol mute disembunyikan jika tidak ada audio
-   - Gallery: foto & video (modal)
-   - RSVP + Ucapan: ke Apps Script (POST no-cors) + fallback localStorage
+   Glassmorphism Invitation - FINAL Polished (with Featured Video)
 ========================================================= */
 
 const $ = (s, p=document) => p.querySelector(s);
@@ -109,6 +104,7 @@ function setCouple(){
   $("#groomIg").href = groom.instagram || "#";
 }
 
+/* -------- Events -------- */
 function buildEvents(){
   const wrap = $("#eventCards");
   wrap.innerHTML = "";
@@ -141,7 +137,7 @@ function buildEvents(){
 
       ${itemsHtml}
 
-      ${ev.mapEmbed ? `<iframe class="mapFrame" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade" src="${ev.mapEmbed}" title="Peta ${safeText(ev.type)}"></iframe>` : ""}
+      ${ev.mapEmbed ? `<iframe class="mapFrame" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="${ev.mapEmbed}" title="Peta ${safeText(ev.type)}"></iframe>` : ""}
 
       <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:10px">
         ${ev.mapDirection ? `<a class="btn btn--ghost" href="${ev.mapDirection}" target="_blank" rel="noopener">Petunjuk Arah</a>` : ""}
@@ -152,6 +148,7 @@ function buildEvents(){
   });
 }
 
+/* -------- Countdown -------- */
 function countdown(){
   const target = new Date(state.cfg.home?.eventISO || new Date().toISOString()).getTime();
   const tick = ()=>{
@@ -172,76 +169,112 @@ function countdown(){
   setInterval(tick, 1000);
 }
 
-/* -------- Gallery: photos + video tiles -------- */
+/* -------- Gallery: foto atas, featured video, foto bawah -------- */
 function gallery(){
-  const grid = $("#galleryGrid");
-  grid.innerHTML = "";
+  const gridTop = $("#galleryPhotosTop");
+  const gridBottom = $("#galleryPhotosBottom");
+  const featured = $("#galleryVideoFeatured");
+
+  gridTop.innerHTML = "";
+  gridBottom.innerHTML = "";
+  featured.innerHTML = "";
 
   const photos = state.cfg.gallery?.photos || [];
   const videos = state.cfg.gallery?.videos || [];
 
-  photos.forEach((src)=>{
+  // Bagi foto menjadi dua bagian mengapit video
+  const mid = Math.ceil(photos.length / 2);
+  const photosTop = photos.slice(0, mid);
+  const photosBottom = photos.slice(mid);
+
+  // Render foto (atas)
+  photosTop.forEach((src)=>{
     const d = document.createElement("div");
     d.className = "gItem glass";
     d.dataset.full = src;
     d.innerHTML = `<img src="${src}" alt="Foto galeri" loading="lazy" />`;
-    grid.appendChild(d);
+    gridTop.appendChild(d);
   });
 
-  videos.forEach((v)=>{
-    const d = document.createElement("div");
-    d.className = "gItem glass gItem--video";
-    d.dataset.video = v.src;
-    const poster = v.poster || photos[0] || "assets/img/cover.jpg";
-    d.innerHTML = `
-      <img src="${poster}" alt="${safeText(v.title || "Prewedding Film")}" loading="lazy" />
-      <div class="gPlay" aria-hidden="true"><div class="gPlayIcon">▶</div></div>
+  // Featured video (satu yang pertama; jika ada beberapa, ambil index 0)
+  const v = videos[0];
+  if(v){
+    const posterFallback = "assets/img/thumbnail.jpg"; // thumbnail khusus yang kamu sediakan
+    const poster = v.poster || posterFallback;
+    const card = document.createElement("div");
+    card.className = "featuredCard";
+    // Klik area untuk buka modal video
+    card.innerHTML = `
+      <a href="javascript:void(0)" class="featuredMediaLink" aria-label="${safeText(v.title || "Video")}" data-video="${v.src}">
+        <div class="featuredMedia" style="background-image:url('${poster}');"></div>
+        <div class="featuredOverlay" aria-hidden="true">
+          <div class="featuredPlay">▶</div>
+        </div>
+      </a>
     `;
-    grid.appendChild(d);
+    featured.appendChild(card);
+
+    // Klik untuk buka video modal
+    featured.addEventListener("click",(e)=>{
+      const link = e.target.closest(".featuredMediaLink");
+      if(link){
+        openVideoModal(link.getAttribute("data-video"));
+      }
+    });
+  }
+
+  // Render foto (bawah)
+  photosBottom.forEach((src)=>{
+    const d = document.createElement("div");
+    d.className = "gItem glass";
+    d.dataset.full = src;
+    d.innerHTML = `<img src="${src}" alt="Foto galeri" loading="lazy" />`;
+    gridBottom.appendChild(d);
   });
 
-  // Photo modal
+  // Photo modal handlers
   const photoModal = $("#photoModal");
   const photoFull = $("#photoFull");
-  const openPhoto = (src)=>{
+  function openPhoto(src){
     photoFull.src = src;
     photoModal.classList.add("show");
     photoModal.setAttribute("aria-hidden","false");
-  };
-  const closePhoto = ()=>{
+  }
+  function closePhoto(){
     photoModal.classList.remove("show");
     photoModal.setAttribute("aria-hidden","true");
-  };
+  }
   $("#photoClose").addEventListener("click", closePhoto);
   photoModal.addEventListener("click",(e)=>{ if(e.target===photoModal) closePhoto(); });
 
-  // Video modal
+  // Video modal handlers
   const videoModal = $("#videoModal");
   const player = $("#videoPlayer");
-  const openVideo = (src)=>{
+  function openVideoModal(src){
     player.src = src;
     videoModal.classList.add("show");
     videoModal.setAttribute("aria-hidden","false");
     player.play().catch(()=>{});
-  };
-  const closeVideo = ()=>{
+  }
+  function closeVideo(){
     player.pause();
     player.removeAttribute("src");
     player.load();
     videoModal.classList.remove("show");
     videoModal.setAttribute("aria-hidden","true");
-  };
+  }
   $("#videoClose").addEventListener("click", closeVideo);
   videoModal.addEventListener("click",(e)=>{ if(e.target===videoModal) closeVideo(); });
 
-  // Delegate click grid
-  grid.addEventListener("click", (e)=>{
-    const v = e.target.closest("[data-video]");
+  // Delegasi klik untuk foto
+  const onPhotoGridClick = (e)=>{
     const p = e.target.closest("[data-full]");
-    if(v){ openVideo(v.dataset.video); return; }
-    if(p){ openPhoto(p.dataset.full); return; }
-  });
+    if(p){ openPhoto(p.dataset.full); }
+  };
+  gridTop.addEventListener("click", onPhotoGridClick);
+  gridBottom.addEventListener("click", onPhotoGridClick);
 
+  // ESC untuk menutup modal
   window.addEventListener("keydown",(e)=>{
     if(e.key==="Escape"){ closePhoto(); closeVideo(); }
   });
@@ -266,7 +299,7 @@ function story(){
   });
 }
 
-/* -------- Gifts with logo -------- */
+/* -------- Gifts -------- */
 function gifts(){
   const wrap = $("#giftWrap");
   wrap.innerHTML = "";
@@ -392,6 +425,8 @@ function wireAudio(){
   if(!audioSrc){
     $("#btnMute").style.display = "none";
     $("#btnMuteGate").style.display = "none";
+    // Tetap bisa buka undangan
+    $("#btnOpen").addEventListener("click", ()=>$("#coverGate").classList.add("hidden"));
     return;
   }
 
