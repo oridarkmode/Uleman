@@ -61,10 +61,20 @@ function setGuest(){
 
 function setHome(){
   const home = state.cfg.home || {};
-  $("#homeGreet").textContent = state.cfg.cover?.greeting || "Assalamu’alaikum Warahmatullahi Wabarakatuh";
+
+  // Salam diubah menjadi "The Wedding Of"
+  $("#homeGreet").textContent = "The Wedding Of";
+
+  // Headline tetap dari config (atau kosongkan jika diinginkan)
   $("#homeHeadline").textContent = home.headline || "";
+
+  // Tanggal: tetap dari config cover
   $("#homeDatePill").textContent = state.cfg.cover?.dateText || "";
+
+  // Lokasi tetap diisi (untuk fallback), tapi kita sembunyikan via CSS
   $("#homeLocPill").textContent = home.locationText || "";
+
+  // Nama pendek mempelai + sinkronisasi ke penutup
   const groomShort = (state.cfg.couple?.groom?.name || "Mempelai Pria").split(" ")[0];
   const brideShort = (state.cfg.couple?.bride?.name || "Mempelai Wanita").split(" ")[0];
   $("#groomNameShort").textContent = groomShort;
@@ -612,3 +622,4 @@ function registerSW(){
     alert("Gagal memuat undangan. Pastikan struktur folder & path file benar.");
   }
 })();
+
