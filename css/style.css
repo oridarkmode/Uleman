@@ -104,6 +104,7 @@ a{ color:inherit; text-decoration:none; }
   background: linear-gradient(180deg, transparent, rgba(255,255,255,.02), transparent);
 }
 
+/* Backgrounds: default */
 .sectionBg{
   position:absolute;
   inset:0;
@@ -116,6 +117,20 @@ a{ color:inherit; text-decoration:none; }
   content:"";
   position:absolute; inset:0;
   background: linear-gradient(180deg, rgba(7,6,12,.88), rgba(7,6,12,.55), rgba(7,6,12,.90));
+}
+
+/* Backgrounds: lebih jelas untuk HOME & CLOSING */
+.sectionBg--home{
+  opacity:.44; /* tampilkan gambar lebih jelas */
+}
+.sectionBg--home::after{
+  background: linear-gradient(180deg, rgba(7,6,12,.70), rgba(7,6,12,.45), rgba(7,6,12,.80));
+}
+.sectionBg--closing{
+  opacity:.42; /* tampilkan gambar lebih jelas */
+}
+.sectionBg--closing::after{
+  background: linear-gradient(180deg, rgba(7,6,12,.68), rgba(7,6,12,.44), rgba(7,6,12,.82));
 }
 
 /* Head center */
@@ -181,7 +196,7 @@ a{ color:inherit; text-decoration:none; }
 }
 .w100{ width:100%; }
 
-/* Gate (Cover) */
+/* Gate (Cover) - background lebih jelas */
 .gate{
   position:fixed;
   inset:0;
@@ -195,15 +210,16 @@ a{ color:inherit; text-decoration:none; }
   inset:0;
   background-position:center;
   background-size:cover;
-  opacity: .100;
+  opacity: .34; /* dari .100 -> .34 agar gambar lebih jelas */
   filter: saturate(1.05) contrast(1.05);
 }
 .gate__bg::after{
   content:"";
   position:absolute; inset:0;
-  background: radial-gradient(900px 500px at 20% 10%, rgba(199,184,255,.15), transparent 60%),
-              radial-gradient(800px 450px at 100% 20%, rgba(124,247,212,.10), transparent 55%),
-              linear-gradient(180deg, rgba(7,6,12,.95), rgba(7,6,12,.95), rgba(7,6,12,.95));
+  /* overlay lebih ringan agar gambar terlihat */
+  background: radial-gradient(900px 500px at 20% 10%, rgba(199,184,255,.18), transparent 60%),
+              radial-gradient(800px 450px at 100% 20%, rgba(124,247,212,.12), transparent 55%),
+              linear-gradient(180deg, rgba(7,6,12,.78), rgba(7,6,12,.78), rgba(7,6,12,.82));
 }
 .gate__card{
   width: min(560px, calc(100% - 36px));
@@ -395,24 +411,45 @@ a{ color:inherit; text-decoration:none; }
 }
 .gItem:hover img{ transform: scale(1.04); }
 
-/* Video overlay */
-.gItem--video .gPlay{
-  position:absolute;
-  inset:0;
-  display:grid;
-  place-items:center;
-  background: radial-gradient(circle at center, rgba(0,0,0,.18), rgba(0,0,0,.48));
-  opacity: 1;
+/* Featured Video di tengah galeri */
+.galleryFeatured{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  margin: 16px auto;
+  width: min(980px, 92%);
 }
-.gPlayIcon{
-  width:64px; height:64px;
+.galleryFeatured .featuredCard{
+  width: 100%;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  overflow: hidden;
+  position: relative;
+}
+.featuredMedia{
+  width:100%;
+  aspect-ratio: 16 / 9;
+  background: rgba(0,0,0,.6) url("../assets/img/thumbnail.jpg") center/cover no-repeat;
+  display:block;
+}
+.featuredOverlay{
+  position:absolute; inset:0;
+  display:grid; place-items:center;
+  background: radial-gradient(circle at center, rgba(0,0,0,.18), rgba(0,0,0,.48));
+}
+.featuredPlay{
+  width:84px; height:84px;
   border-radius:999px;
-  background: rgba(255,255,255,.14);
-  border: 1px solid rgba(255,255,255,.24);
-  display:grid;
-  place-items:center;
-  backdrop-filter: blur(10px);
-  font-size: 24px;
+  border: 1px solid rgba(255,255,255,.28);
+  background: rgba(255,255,255,.16);
+  display:grid; place-items:center;
+  backdrop-filter: blur(12px);
+  font-size: 28px;
+  color: #fff;
 }
 
 /* Modal */
