@@ -1,8 +1,5 @@
 /* =========================================================
-   Glassmorphism Invitation - Mobile-Stable Fix
-   - Perbaikan markup innerHTML (img/iframe/a)
-   - Gallery: split top/bottom photos + featured video center
-   - Events: mapEmbed ditanam sebagai <iframe> valid
+   Glassmorphism Invitation - FINAL (Stabil + Featured Video)
 ========================================================= */
 
 const $ = (s, p=document) => p.querySelector(s);
@@ -90,7 +87,7 @@ function setCouple(){
   $("#groomIg").href = groom.instagram || "#";
 }
 
-/* -------- Events (fix iframe & link) -------- */
+/* -------- Events (buat DOM aman) -------- */
 function buildEvents(){
   const wrap = $("#eventCards");
   wrap.innerHTML = "";
@@ -100,42 +97,60 @@ function buildEvents(){
     const card = document.createElement("article");
     card.className = "eventCard glass reveal";
 
-    const itemsHtml = (ev.items || []).map(it => `
-      <div class="eventBlock">
+    const top = document.createElement("div");
+    top.className = "eventTop";
+    const badge = document.createElement("span");
+    badge.className = "badge";
+    badge.textContent = safeText(ev.type);
+    const num = document.createElement("span");
+    num.className = "muted small";
+    num.textContent = `#${String(i+1).padStart(2,"0")}`;
+    top.appendChild(badge);
+    top.appendChild(num);
+    card.appendChild(top);
+
+    const meta = document.createElement("div");
+    meta.className = "eventMeta";
+    meta.style.marginTop = "6px";
+    meta.innerHTML = `<div><b>${safeText(ev.dateText || "")}</b></div>`;
+    card.appendChild(meta);
+
+    (ev.items || []).forEach(it=>{
+      const block = document.createElement("div");
+      block.className = "eventBlock";
+      block.innerHTML = `
         <div class="badge" style="display:inline-block">${safeText(it.label)}</div>
         <div class="eventMeta" style="margin-top:8px">
           <div><b>${safeText(it.timeText)}</b></div>
           <div class="eventPlace">${safeText(it.place)}</div>
           <div class="muted small">${safeText(it.address)}</div>
         </div>
-      </div>
-    `).join("");
+      `;
+      card.appendChild(block);
+    });
 
-    const mapIframe = ev.mapEmbed
-      ? `<iframe class="mapFrame" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="${ev.mapEmbed}" title="Peta ${safeText(ev.type)}"></iframe>`
-      : "";
+    if (ev.mapEmbed) {
+      const iframe = document.createElement("iframe");
+      iframe.className = "mapFrame";
+      iframe.loading = "lazy";
+      iframe.referrerPolicy = "no-referrer-when-downgrade";
+      iframe.title = `Peta ${safeText(ev.type)}`;
+      iframe.src = ev.mapEmbed;
+      card.appendChild(iframe);
+    }
 
-    const dirBtn = ev.mapDirection
-      ? `<a class="btn btn--ghost" href="${ev.mapDirection}" target="_blank" rel="noopener">Petunjuk Arah</a>`
-      : "";
-
-    card.innerHTML = `
-      <div class="eventTop">
-        <span class="badge">${safeText(ev.type)}</span>
-        <span class="muted small">#${String(i+1).padStart(2,"0")}</span>
-      </div>
-
-      <div class="eventMeta" style="margin-top:6px">
-        <div><b>${safeText(ev.dateText || "")}</b></div>
-      </div>
-
-      ${itemsHtml}
-      ${mapIframe}
-
-      <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:10px">
-        ${dirBtn}
-      </div>
-    `;
+    if (ev.mapDirection) {
+      const btnWrap = document.createElement("div");
+      btnWrap.style.cssText = "display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:10px";
+      const a = document.createElement("a");
+      a.className = "btn btn--ghost";
+      a.href = ev.mapDirection;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.textContent = "Petunjuk Arah";
+      btnWrap.appendChild(a);
+      card.appendChild(btnWrap);
+    }
 
     wrap.appendChild(card);
   });
@@ -160,7 +175,7 @@ function countdown(){
   setInterval(tick, 1000);
 }
 
-/* -------- Gallery (split + featured video) -------- */
+/* -------- Gallery: foto atas, video featured, foto bawah -------- */
 function gallery(){
   const gridTop = $("#galleryPhotosTop");
   const gridBottom = $("#galleryPhotosBottom");
@@ -180,26 +195,43 @@ function gallery(){
     const d = document.createElement("div");
     d.className = "gItem glass";
     d.dataset.full = src;
-    d.innerHTML = `<img src="${src}" alt="Foto galeri" loading="lazy" />`;
+    const img = document.createElement("img");
+    img.src = src;
+    img.alt = "Foto galeri";
+    img.loading = "lazy";
+    d.appendChild(img);
     return d;
   };
 
   photosTop.forEach(src => gridTop.appendChild(makePhotoItem(src)));
 
-  // Featured video (ambil video pertama)
   if(videos[0]){
     const v = videos[0];
     const poster = v.poster || "assets/img/thumbnail.jpg";
+
     const card = document.createElement("div");
     card.className = "featuredCard";
-    card.innerHTML = `
-      <a href="javascript:void(0)" class="featuredMediaLink" data-video="${v.src}">
-        <div class="featuredMedia" style="background-image:url('${poster}');"></div>
-        <div class="featuredOverlay" aria-hidden="true">
-          <div class="featuredPlay">▶</div>
-        </div>
-      </a>
-    `;
+
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "featuredMediaLink";
+    btn.setAttribute("data-video", v.src);
+    btn.style.cssText = "all:unset;display:block;cursor:pointer;";
+
+    const media = document.createElement("div");
+    media.className = "featuredMedia";
+    media.style.backgroundImage = `url('${poster}')`;
+
+    const overlay = document.createElement("div");
+    overlay.className = "featuredOverlay";
+    const play = document.createElement("div");
+    play.className = "featuredPlay";
+    play.textContent = "▶";
+    overlay.appendChild(play);
+
+    btn.appendChild(media);
+    btn.appendChild(overlay);
+    card.appendChild(btn);
     featured.appendChild(card);
 
     featured.addEventListener("click",(e)=>{
@@ -246,7 +278,7 @@ function gallery(){
   $("#videoClose").addEventListener("click", closeVideo);
   videoModal.addEventListener("click",(e)=>{ if(e.target===videoModal) closeVideo(); });
 
-  // Delegasi klik foto
+  // Delegasi klik untuk foto
   const onPhotoGridClick = (e)=>{
     const p = e.target.closest("[data-full]");
     if(p){ openPhoto(p.dataset.full); }
@@ -273,36 +305,61 @@ function gifts(){
     const d = document.createElement("div");
     d.className = "giftCard glass reveal";
 
-    const logo = g.logo
-      ? `<img class="giftLogo" src="${g.logo}" alt="Logo ${safeText(g.note || g.label)}" loading="lazy" />`
-      : "";
-    const note = g.note
-      ? `<div class="giftNote">${safeText(g.note)}</div>`
-      : `<div class="giftNote">${safeText(g.label)}</div>`;
+    const top = document.createElement("div");
+    top.className = "giftTop";
 
-    d.innerHTML = `
-      <div class="giftTop">
-        ${logo}
-        <div style="text-align:left">
-          ${note}
-          <h4 style="margin:4px 0 0">${safeText(g.label)}</h4>
-        </div>
-      </div>
+    if(g.logo){
+      const logo = document.createElement("img");
+      logo.className = "giftLogo";
+      logo.src = g.logo;
+      logo.alt = `Logo ${safeText(g.note || g.label)}`;
+      logo.loading = "lazy";
+      top.appendChild(logo);
+    }
 
-      <div class="valueBox">
-        <b>${safeText(g.name)}</b>
-        <div class="mono">${safeText(g.value)}</div>
-      </div>
-
-      <div style="display:flex; gap:10px; margin-top:10px; flex-wrap:wrap; justify-content:center">
-        <button class="btn btn--primary" type="button" data-copy="${safeText(g.value)}">
-          <span class="btn__glow" aria-hidden="true"></span> Salin
-        </button>
-        <button class="btn btn--ghost" type="button" data-share="${safeText(g.value)}">Bagikan</button>
-      </div>
-
-      <p class="tiny muted" style="margin:10px 0 0">Terima kasih atas perhatian dan doanya 🙏</p>
+    const txt = document.createElement("div");
+    txt.style.textAlign = "left";
+    txt.innerHTML = `
+      <div class="giftNote">${safeText(g.note || g.label)}</div>
+      <h4 style="margin:4px 0 0">${safeText(g.label)}</h4>
     `;
+    top.appendChild(txt);
+
+    const box = document.createElement("div");
+    box.className = "valueBox";
+    box.innerHTML = `
+      <b>${safeText(g.name)}</b>
+      <div class="mono">${safeText(g.value)}</div>
+    `;
+
+    const actions = document.createElement("div");
+    actions.style.cssText = "display:flex; gap:10px; margin-top:10px; flex-wrap:wrap; justify-content:center";
+
+    const btnCopy = document.createElement("button");
+    btnCopy.className = "btn btn--primary";
+    btnCopy.type = "button";
+    btnCopy.setAttribute("data-copy", safeText(g.value));
+    btnCopy.innerHTML = `<span class="btn__glow" aria-hidden="true"></span> Salin`;
+
+    const btnShare = document.createElement("button");
+    btnShare.className = "btn btn--ghost";
+    btnShare.type = "button";
+    btnShare.setAttribute("data-share", safeText(g.value));
+    btnShare.textContent = "Bagikan";
+
+    actions.appendChild(btnCopy);
+    actions.appendChild(btnShare);
+
+    const thanks = document.createElement("p");
+    thanks.className = "tiny muted";
+    thanks.style.margin = "10px 0 0";
+    thanks.textContent = "Terima kasih atas perhatian dan doanya 🙏";
+
+    d.appendChild(top);
+    d.appendChild(box);
+    d.appendChild(actions);
+    d.appendChild(thanks);
+
     wrap.appendChild(d);
   });
 
