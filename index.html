@@ -10,18 +10,20 @@
   <meta property="og:type" content="website" />
   <meta property="og:title" content="Undangan Pernikahan" />
   <meta property="og:description" content="Kami mengundang Anda untuk hadir di hari bahagia kami." />
-  <meta property="og:image" content="assets/img/cover.jpg" />
+  <meta property="og:image" content="./assets/img/cover.jpg" />
 
-  <!-- PWA -->
-  <link rel="manifest" href="manifest.webmanifest" />
-  <link rel="icon" href="assets/icons/icon-192.png" />
+  <!-- PWA (gunakan path relatif agar cocok dengan GitHub Pages subfolder) -->
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="icon" href="./assets/icons/icon-192.png" sizes="192x192" />
+  <link rel="apple-touch-icon" href="./assets/icons/icon-192.png" />
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="css/style.css" />
+  <!-- CSS -->
+  <link rel="stylesheet" href="./css/style.css" />
 </head>
 
 <body>
@@ -153,7 +155,7 @@
 
         <div class="coupleGrid">
           <article class="coupleCard glass reveal">
-            <img id="bridePhoto" class="coupleImg" src="assets/img/couple-bride.jpg" alt="Foto Mempelai Wanita" />
+            <img id="bridePhoto" class="coupleImg" src="./assets/img/couple-bride.jpg" alt="Foto Mempelai Wanita" />
             <h4 id="brideName" class="coupleName">Mempelai Wanita</h4>
             <p id="brideParents" class="muted">Putri dari Bapak ... &amp; Ibu ...</p>
             <a id="brideIg" class="link" href="#" target="_blank" rel="noopener">Instagram ↗</a>
@@ -164,7 +166,7 @@
           </div>
 
           <article class="coupleCard glass reveal">
-            <img id="groomPhoto" class="coupleImg" src="assets/img/couple-groom.jpg" alt="Foto Mempelai Pria" />
+            <img id="groomPhoto" class="coupleImg" src="./assets/img/couple-groom.jpg" alt="Foto Mempelai Pria" />
             <h4 id="groomName" class="coupleName">Mempelai Pria</h4>
             <p id="groomParents" class="muted">Putra dari Bapak ... &amp; Ibu ...</p>
             <a id="groomIg" class="link" href="#" target="_blank" rel="noopener">Instagram ↗</a>
@@ -338,7 +340,7 @@
     </section>
   </main>
 
-  <!-- 10) FOOTER -->
+  <!-- FOOTER -->
   <footer class="footer" aria-label="Footer">
     <div class="container footerInner">
       <p class="tiny muted">© <span id="yearNow"></span> <b id="footerBrand">Brand</b> — All rights reserved.</p>
@@ -346,6 +348,7 @@
     </div>
   </footer>
 
-  <script defer src="js/script.js"></script>
+  <!-- JS (defer) -->
+  <script src="./js/script.js" defer></script>
 </body>
 </html>
