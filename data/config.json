@@ -1,53 +1,46 @@
 {
   "brand": "Oridarkmode Studio",
   "siteTitle": "Undangan Pernikahan",
-
   "theme": {
     "accent": "#C7B8FF",
     "accent2": "#7CF7D4",
     "bg": "#07060C"
   },
-
   "guest": {
     "paramName": "to",
     "defaultName": "Tamu Undangan"
   },
-
   "backgrounds": {
     "cover": "assets/img/bg-cover.jpg",
     "home": "assets/img/bg-home.jpg",
     "closing": "assets/img/bg-closing.jpg"
   },
-
   "cover": {
     "titleTop": "The Wedding Of",
     "title": "K & K",
     "dateText": "Selasa, 24 Maret 2026",
     "greeting": ""
   },
-
   "home": {
     "headline": "Kami mengundang Bapak/Ibu/Saudara/i untuk hadir di hari bahagia kami.",
     "locationText": "Jepara, Jawa Tengah",
     "eventISO": "2026-03-24T09:00:00+07:00",
     "timezone": "WIB"
   },
-
   "couple": {
     "bride": {
       "name": "Khoirun Nisa, S.Sos.",
       "parents": "Putri dari Bapak Junaidi & Ibu Siti Zulaikho",
       "photo": "assets/img/couple-bride.jpg",
-      "instagram": "https://www.instagram.com/enchalightmode?igsh=bHFjbmNjcXZ5M3Fv"
+      "instagram": "https://instagram.com/"
     },
     "groom": {
       "name": "Khoiril Murbaist, S.Sos.",
       "parents": "Putra dari Bapak Edy Suyanto & Ibu Lusyati",
       "photo": "assets/img/couple-groom.jpg",
-      "instagram": "https://www.instagram.com/oridarkmode?igsh=MTM1aGpta2p0YWs2NA=="
+      "instagram": "https://instagram.com/"
     }
   },
-
   "events": [
     {
       "type": "Akad & Resepsi",
@@ -84,17 +77,11 @@
       "mapDirection": "https://maps.app.goo.gl/mMfqaDjNkEtTJgn68"
     }
   ],
-
   "gallery": {
     "photos": [
       "assets/img/gallery-1.jpg",
       "assets/img/gallery-2.jpg",
-      "assets/img/gallery-3.jpg",
-      "assets/img/gallery-4.jpg",
-      "assets/img/gallery-5.jpg",
-      "assets/img/gallery-6.jpg",
-      "assets/img/gallery-7.JPG",
-      "assets/img/gallery-8.jpg"
+      "assets/img/gallery-3.jpg"
     ],
     "videos": [
       {
@@ -104,25 +91,11 @@
       }
     ]
   },
-
   "story": [
-    {
-      "year": "2021",
-      "title": "Pertama Bertemu",
-      "desc": "Kami dipertemukan di ..."
-    },
-    {
-      "year": "2025",
-      "title": "Lamaran",
-      "desc": "Dengan restu keluarga ..."
-    },
-    {
-      "year": "2026",
-      "title": "Hari Bahagia",
-      "desc": "Kami memutuskan untuk melangkah bersama."
-    }
+    { "year": "2021", "title": "Pertama Bertemu", "desc": "Kami dipertemukan di ..." },
+    { "year": "2025", "title": "Lamaran", "desc": "Dengan restu keluarga ..." },
+    { "year": "2026", "title": "Hari Bahagia", "desc": "Kami memutuskan untuk melangkah bersama." }
   ],
-
   "gifts": {
     "enabled": true,
     "options": [
@@ -149,29 +122,18 @@
       }
     ]
   },
-
   "music": {
     "src": "assets/audio/song.mp3",
     "startMuted": true
   },
-
-  "rsvp": {
-    "enabled": true,
-    "maxPax": 5
-  },
-
+  "rsvp": { "enabled": true, "maxPax": 5 },
   "sheet": {
     "enabled": true,
     "postEndpoint": "https://script.google.com/macros/s/AKfycbz89KY1AluoYEzRnxsCFteg7pb9PYK5t4pl4WPx7XiMYcTQvUB_VbeeCEgHcQDP-gsuqw/exec",
     "readEndpoint": "https://script.google.com/macros/s/AKfycbz89KY1AluoYEzRnxsCFteg7pb9PYK5t4pl4WPx7XiMYcTQvUB_VbeeCEgHcQDP-gsuqw/exec"
   },
-
   "closing": {
     "title": "Terima Kasih",
     "desc": "Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu."
   }
-
 }
-
-
-
