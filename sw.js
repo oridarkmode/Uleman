@@ -1,4 +1,4 @@
-const CACHE = "glass-invite-final-v3";
+const CACHE = "glass-invite-final-v4"; // bump version untuk memaksa update
 const ASSETS = [
   "./",
   "./index.html",
