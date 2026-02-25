@@ -101,7 +101,7 @@
   <main>
     <!-- 2) HOME -->
     <section id="home" class="section hero" aria-labelledby="homeTitle">
-      <div class="sectionBg" id="homeBg" aria-hidden="true"></div>
+      <div class="sectionBg sectionBg--home" id="homeBg" aria-hidden="true"></div>
 
       <div class="container">
         <div class="heroCard glass reveal">
@@ -192,7 +192,14 @@
           <p class="muted">Klik Untuk Melihat</p>
         </div>
 
-        <div id="galleryGrid" class="galleryGrid reveal"></div>
+        <!-- Foto bagian atas -->
+        <div id="galleryPhotosTop" class="galleryGrid reveal"></div>
+
+        <!-- Video utama di tengah -->
+        <div id="galleryVideoFeatured" class="galleryFeatured reveal" aria-label="Video Utama"></div>
+
+        <!-- Foto bagian bawah -->
+        <div id="galleryPhotosBottom" class="galleryGrid reveal"></div>
       </div>
 
       <!-- Photo modal -->
@@ -311,7 +318,7 @@
 
     <!-- 9) PENUTUP -->
     <section id="closing" class="section closingSection" aria-labelledby="closingTitle">
-      <div class="sectionBg" id="closingBg" aria-hidden="true"></div>
+      <div class="sectionBg sectionBg--closing" id="closingBg" aria-hidden="true"></div>
       <div class="container">
         <div class="closingText reveal">
           <h3 class="title" id="closingTitle">Terima Kasih</h3>
@@ -334,11 +341,10 @@
   <footer class="footer" aria-label="Footer">
     <div class="container footerInner">
       <p class="tiny muted">© <span id="yearNow"></span> <b id="footerBrand">Brand</b> — All rights reserved.</p>
-      <p class="tiny muted">Uleman — Khoiril &amp; Nisa</p>
+      <p class="tiny muted">Undangan Digital — Khoiril &amp; Nisa</p>
     </div>
   </footer>
 
   <script src="js/script.js" defer></script>
 </body>
-
 </html>
