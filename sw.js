@@ -1,5 +1,5 @@
 // sw.js
-const CACHE = "glass-invite-final-v8"; // bump versi terbaru
+const CACHE = "glass-invite-final-v11"; // naikkan angkanya
 const PRECACHE = [
   "./",
   "./index.html",
@@ -87,4 +87,5 @@ self.addEventListener("fetch", (e) => {
     }).catch(() => caches.match(req))
   );
 });
+
 
