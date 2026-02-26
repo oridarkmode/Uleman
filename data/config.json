@@ -93,11 +93,6 @@
         "title": "Prewedding Film",
         "src": "assets/video/prewedding.mp4",
         "poster": "assets/img/gallery-1.jpg"
-        /*
-          Jika nanti kamu upload thumbnail khusus:
-          "poster": "assets/img/video-thumb.jpg"
-          (lalu pastikan file itu ada di /assets/img/)
-        */
       }
     ]
   },
@@ -136,7 +131,10 @@
     "src": "assets/audio/song.mp3",
     "startMuted": true
   },
-  "rsvp": { "enabled": true, "maxPax": 5 },
+  "rsvp": {
+    "enabled": true,
+    "maxPax": 5
+  },
   "sheet": {
     "enabled": true,
     "postEndpoint": "https://script.google.com/macros/s/AKfycbz89KY1AluoYEzRnxsCFteg7pb9PYK5t4pl4WPx7XiMYcTQvUB_VbeeCEgHcQDP-gsuqw/exec",
@@ -147,5 +145,3 @@
     "desc": "Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu."
   }
 }
-
-
