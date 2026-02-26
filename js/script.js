@@ -604,7 +604,8 @@ function wireUI(){
   });
 }
 function registerSW(){
-  if("serviceWorker" in navigator){
+  // Tambahkan flag ?nosw untuk mematikan SW saat pengembangan
+  if ("serviceWorker" in navigator && !location.search.includes("nosw")) {
     navigator.serviceWorker.register("./sw.js").catch(()=>{});
   }
 }
@@ -622,4 +623,3 @@ function registerSW(){
     alert("Gagal memuat undangan. Pastikan struktur folder & path file benar.");
   }
 })();
-
