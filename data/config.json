@@ -92,7 +92,7 @@
       {
         "title": "Prewedding Film",
         "src": "assets/video/prewedding.mp4",
-        "poster": "assets/img/gallery-1.jpg"
+        "poster": "assets/img/thumbnail.jpg"
       }
     ]
   },
@@ -145,3 +145,4 @@
     "desc": "Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu."
   }
 }
+
