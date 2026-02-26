@@ -95,7 +95,7 @@
         "poster": "assets/img/thumbnail.jpg"
       }
     ]
-  }
+  },
   "story": [
     { "year": "2021", "title": "Pertama Bertemu", "desc": "Kami dipertemukan di ..." },
     { "year": "2025", "title": "Lamaran", "desc": "Dengan restu keluarga ..." },
@@ -145,5 +145,6 @@
     "desc": "Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu."
   }
 }
+
 
 
