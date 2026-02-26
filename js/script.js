@@ -215,9 +215,20 @@ function gallery(){
 
   photosTop.forEach(src => gridTop.appendChild(makePhotoItem(src)));
 
-  if(videos[0]){
-    const v = videos[0];
-    const poster = v.poster || "./assets/img/thumbnail.jpg";
+  // -------- Video featured (tengah) --------
+  // Log untuk inspeksi live (cek di DevTools → Console)
+  console.log("[gallery] videos (from config):", state.cfg.gallery?.videos);
+
+  const vids = Array.isArray(state.cfg.gallery?.videos) ? state.cfg.gallery.videos : [];
+
+  if (vids.length > 0 && vids[0]) {
+    const v = vids[0];
+
+    // Fallback poster yang benar-benar ada:
+    // prioritas: v.poster -> foto pertama -> gallery-1.jpg
+    const poster =
+      v.poster ||
+      (photos && photos.length ? photos[0] : "assets/img/gallery-1.jpg");
 
     const card = document.createElement("div");
     card.className = "featuredCard";
@@ -225,7 +236,7 @@ function gallery(){
     const btn = document.createElement("button");
     btn.type = "button";
     btn.className = "featuredMediaLink";
-    btn.setAttribute("data-video", v.src);
+    btn.setAttribute("data-video", v.src || "");
     btn.style.cssText = "all:unset;display:block;cursor:pointer;";
 
     const media = document.createElement("div");
@@ -244,12 +255,32 @@ function gallery(){
     card.appendChild(btn);
     featured.appendChild(card);
 
-    featured.addEventListener("click",(e)=>{
-      const link = e.target.closest(".featuredMediaLink");
-      if(link){
-        openVideoModal(link.getAttribute("data-video"));
+    // Pasang listener klik langsung di tombol
+    btn.addEventListener("click", () => {
+      const src = btn.getAttribute("data-video") || "";
+      if (!src) {
+        console.warn("[gallery] data-video kosong. Cek config.json -> gallery.videos[0].src");
+        return;
       }
+      openVideoModal(src);
     });
+
+    console.log("[gallery] Video tile rendered with src:", v.src, "poster:", poster);
+  } else {
+    console.warn("[gallery] Tidak ada item video. Pastikan data/config.json -> gallery.videos adalah array dengan minimal 1 item.");
+    // (Opsional) render placeholder agar terlihat blok ini berjalan
+    // Hapus blok ini jika tidak ingin placeholder.
+    const card = document.createElement("div");
+    card.className = "featuredCard";
+    const info = document.createElement("div");
+    info.style.cssText = "padding:32px;text-align:center;color:#fff;";
+    info.innerHTML = `
+      <div class="featuredMedia" style="display:block;background:#222;aspect-ratio:16/9;border-radius:0;"></div>
+      <div style="margin-top:12px;font-weight:700;">Video belum dikonfigurasi</div>
+      <div class="muted small" style="margin-top:4px;">Tambahkan array "gallery.videos" di data/config.json</div>
+    `;
+    card.appendChild(info);
+    featured.appendChild(card);
   }
 
   photosBottom.forEach(src => gridBottom.appendChild(makePhotoItem(src)));
@@ -623,3 +654,4 @@ function registerSW(){
     alert("Gagal memuat undangan. Pastikan struktur folder & path file benar.");
   }
 })();
+
