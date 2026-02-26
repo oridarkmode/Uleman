@@ -81,16 +81,26 @@
     "photos": [
       "assets/img/gallery-1.jpg",
       "assets/img/gallery-2.jpg",
-      "assets/img/gallery-3.jpg"
+      "assets/img/gallery-3.jpg",
+      "assets/img/gallery-4.jpg",
+      "assets/img/gallery-5.jpg",
+      "assets/img/gallery-6.jpg",
+      "assets/img/gallery-7.JPG",
+      "assets/img/gallery-8.jpg"
     ],
     "videos": [
       {
         "title": "Prewedding Film",
         "src": "assets/video/prewedding.mp4",
         "poster": "assets/img/gallery-1.jpg"
+        /*
+          Jika nanti kamu upload thumbnail khusus:
+          "poster": "assets/img/video-thumb.jpg"
+          (lalu pastikan file itu ada di /assets/img/)
+        */
       }
     ]
-  },
+  }
   "story": [
     { "year": "2021", "title": "Pertama Bertemu", "desc": "Kami dipertemukan di ..." },
     { "year": "2025", "title": "Lamaran", "desc": "Dengan restu keluarga ..." },
@@ -137,3 +147,4 @@
     "desc": "Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu."
   }
 }
+
