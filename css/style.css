@@ -416,6 +416,27 @@ a{ color:inherit; text-decoration:none; }
 .gItem:hover img{ transform: scale(1.04); }
 
 /* Featured Video di tengah galeri */
+/* --- FIX: featured video button harus jadi konteks positioning --- */
+.featuredMediaLink{
+  position: relative;  /* supaya .featuredOverlay (position:absolute) nempel di poster */
+  display: block;      /* jaga-jaga bila style inline tidak tersetel */
+}
+
+/* --- FIX: fallback tinggi jika browser tidak menerapkan aspect-ratio untuk div --- */
+@supports not (aspect-ratio: 16 / 9) {
+  .featuredMedia{
+    width: 100%;
+    height: min(54vw, 420px); /* 16:9 kira-kira; pilih nilai aman */
+    background-size: cover;
+    background-position: center;
+  }
+}
+
+/* --- OPSIONAL: bikin overlay play lebih kontras agar terlihat jelas --- */
+.featuredOverlay{
+  background: radial-gradient(circle at center, rgba(0,0,0,.18), rgba(0,0,0,.42));
+}
+
 .galleryFeatured{
   display:flex;
   justify-content:center;
@@ -740,3 +761,4 @@ input:focus, select:focus, textarea:focus{
   font-size: 11px !important;
   letter-spacing: .14em;
 }
+
