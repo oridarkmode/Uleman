@@ -280,6 +280,16 @@
                 <textarea id="rsvpMsg" rows="3" maxlength="200" placeholder="Tulis pesan..." autocomplete="off"></textarea>
               </label>
 
+              <!-- Honeypot anti-bot (RSVP) -->
+              <input
+                type="text"
+                id="hp_trap_rsvp"
+                name="hp_trap_rsvp"
+                tabindex="-1"
+                autocomplete="off"
+                aria-hidden="true"
+                style="position:absolute; left:-9999px; width:1px; height:1px; padding:0; border:0;"
+              />
               <button class="btn btn--primary w100" type="submit">
                 <span class="btn__glow" aria-hidden="true"></span>
                 Kirim RSVP
@@ -352,5 +362,6 @@
   <script src="./js/script.js?v=20260226" defer></script>
 </body>
 </html>
+
 
 
