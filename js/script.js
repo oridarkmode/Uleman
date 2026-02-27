@@ -516,7 +516,7 @@ async function postToSheet(payload){
   const url = state.cfg.sheet?.postEndpoint;
   if(!url) return { ok:false, msg:"missing-endpoint" };
   try{
-    await fetch(url, { method: "POST", mode: "no-cors", headers: { "Content-Type":"application/json" }, body: JSON.stringify(payload) });
+    await fetch(url, { method: "POST", mode: "no-cors", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...payload, secret: state.cfg.sheet.secret }) });
     return { ok:true };
   }catch(err){
     return { ok:false, msg: err.message || "failed" };
@@ -654,4 +654,5 @@ function registerSW(){
     alert("Gagal memuat undangan. Pastikan struktur folder & path file benar.");
   }
 })();
+
 
