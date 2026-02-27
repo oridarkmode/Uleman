@@ -311,6 +311,16 @@
                 <input id="wishText" type="text" maxlength="160" required placeholder="Selamat ya..." />
               </label>
 
+              <!-- Honeypot anti-bot (Ucapan) -->
+              <input
+                type="text"
+                id="hp_trap_wish"
+                name="hp_trap_wish"
+                tabindex="-1"
+                autocomplete="off"
+                aria-hidden="true"
+                style="position:absolute; left:-9999px; width:1px; height:1px; padding:0; border:0;"
+              />
               <button class="btn btn--ghost w100" type="submit">Kirim Ucapan</button>
               <p class="tiny muted">Ucapan tersimpan ke Google Spreadsheet (jika endpoint sudah diisi di config).</p>
             </form>
@@ -362,6 +372,7 @@
   <script src="./js/script.js?v=20260226" defer></script>
 </body>
 </html>
+
 
 
 
