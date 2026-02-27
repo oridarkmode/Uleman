@@ -138,6 +138,7 @@
   },
   "sheet": {
     "enabled": true,
+    "secret": "TOKENRAHASIA-123456789",
     "postEndpoint": "https://script.google.com/macros/s/AKfycbz89KY1AluoYEzRnxsCFteg7pb9PYK5t4pl4WPx7XiMYcTQvUB_VbeeCEgHcQDP-gsuqw/exec",
     "readEndpoint": "https://script.google.com/macros/s/AKfycbz89KY1AluoYEzRnxsCFteg7pb9PYK5t4pl4WPx7XiMYcTQvUB_VbeeCEgHcQDP-gsuqw/exec"
   },
@@ -146,6 +147,7 @@
     "desc": "Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu."
   }
 }
+
 
 
 
