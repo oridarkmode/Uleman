@@ -576,8 +576,14 @@ function wireRSVP(){
 
   $("#wishForm").addEventListener("submit", async (e)=>{
     e.preventDefault();
+
+    // Honeypot: jika terisi, anggap bot → jangan kirim
+    const hp = $("#hp_trap_wish")?.value?.trim();
+    if (hp) { return; }
+
     const name = safeText($("#wishName").value);
     const text = safeText($("#wishText").value);
+
     if(!name || !text){ alert("Nama dan ucapan wajib diisi."); return; }
     const entry = { type:"wish", name, text, createdAt: new Date().toISOString() };
     const res = await postToSheet(entry);
@@ -654,5 +660,6 @@ function registerSW(){
     alert("Gagal memuat undangan. Pastikan struktur folder & path file benar.");
   }
 })();
+
 
 
