@@ -749,3 +749,53 @@ input:focus, select:focus, textarea:focus{
   font-size: 11px !important;
   letter-spacing: .14em;
 }
+/* === FIX FINAL: PAKSA TILE VIDEO MUNCUL === */
+
+#galleryVideoFeatured {
+  display: block !important;
+}
+
+.featuredCard {
+  display: block !important;
+  width: 100% !important;
+}
+
+/* FIX utama: paksa tinggi poster video agar tidak 0 */
+.featuredMedia {
+  width: 100% !important;
+  height: 400px !important;       /* Tinggi aman, 100% pasti tampil */
+  background-size: cover !important;
+  background-position: center !important;
+  display: block !important;
+}
+
+/* Wrapper tombol tetap posisi relatif */
+.featuredMediaLink {
+  position: relative !important;
+  display: block !important;
+  width: 100% !important;
+}
+
+/* Overlay play selalu terlihat */
+.featuredOverlay {
+  position: absolute !important;
+  inset: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: rgba(0,0,0,0.30) !important; /* lebih kontras */
+}
+
+.featuredPlay {
+  width: 84px;
+  height: 84px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.3);
+  background: rgba(255,255,255,.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  color: white;
+}
+
