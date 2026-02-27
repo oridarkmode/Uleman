@@ -97,9 +97,10 @@
     ]
   },
   "story": [
-    { "year": "2021", "title": "Pertama Bertemu", "desc": "Kami dipertemukan di ..." },
-    { "year": "2025", "title": "Lamaran", "desc": "Dengan restu keluarga ..." },
-    { "year": "2026", "title": "Hari Bahagia", "desc": "Kami memutuskan untuk melangkah bersama." }
+    { "year": "2019", "title": "Pertama Bertemu", "desc": "Alam semesta yang seluas ini kami tidak pernah menyangka akan dipertemukan, namun sebuah garis takdir tidak ada yang kebetulan, kami bertemu pertama kali dalam ruangan kelas sederhana yang pada saat itu kami baru saja menyandang status mahasiswa, kami adalah teman satu kelas." },
+    { "year": "2021", "title": "Dekat", "desc": "Tidak terasa, ternyata rasa tulus kasih tanpa pamrih tumbuh dihati kami, kami saling mencintai lalu kami memutuskan untuk saling dalam hal apapun itu, saling mengasihi, saling menghargai, saling menjaga komitmen dan saling2 lainnya." },
+    { "year": "2025", "title": "Lamaran", "desc": "Kami memutuskan untuk melangkah, meminta restu dan meminta ridho, dua keluarga berkumpul silaturahmi dan saling bertukar cerita, makan bersama dan kami sangat amat bahagia." },
+    { "year": "2026", "title": "Hari Bahagia", "desc": "Ternyata setelah acara pertemuan kedua keluarga satu tahun lalu, kami benar2 sampai pada harap yang selalu dilangitkan itu, kami akan berjanji dihadapan Tuhan dan beribu malaikat untuk melaksanakan ibadah terpanjang dalam hidup." }
   ],
   "gifts": {
     "enabled": true,
@@ -145,6 +146,7 @@
     "desc": "Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu."
   }
 }
+
 
 
 
